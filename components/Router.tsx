@@ -10,11 +10,16 @@ import * as FileSystem from 'expo-file-system';
 import { LoadCounter } from '../data/LoadCounter';
 import UserSettings from '../data/UserSettings';
 import { GenderType } from '../models/IUserSettings';
+import Page from '../models/Page';
+import GiftsView from '../views/GiftsView';
 
 function Router() {
-    const [page, setPage] = useState<number>(0);
+    const [page, setPage] = useState<Page>(Page.LOGIN);
     const [profileId, setProfileId] = useState<number>(0);
     const [profiles, setProfiles] = useState<Array<Profile>>([]);
+
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
 
     console.log('THEME: ' + UserSettings.theme);
 
@@ -26,6 +31,12 @@ function Router() {
             if (newProfileId !== undefined) 
                 setProfileId(newProfileId);
             setPage(newPage);
+        });
+
+    if (Emit.listeners('forceUpdateEmit').length === 0)
+        Emit.addListener('forceUpdateEmit', () => {
+            console.log('router force');
+            forceUpdate
         });
 
     // let _profiles: Array<Profile> = [];
@@ -43,10 +54,16 @@ function Router() {
     // FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'data.json', JSON.stringify(Profiles));
     
     let pageElement!: JSX.Element;
-    if (page === 0) {
+    if (page === Page.LOGIN) {
         pageElement = <LoginView source={profiles} />;
-    } else if (page === 1) {
+    } else if (page === Page.PROFILE) {
         pageElement = <ProfileView fullSource={profiles} profileId={profileId} />
+    } else if (page === Page.GIFTS) {
+        pageElement = <GiftsView />
+    } else if (page === Page.DATES) {
+        pageElement = <View></View>
+    } else if (page === Page.QUIZ) {
+        pageElement = <View></View>
     }
 
     return (

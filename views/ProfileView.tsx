@@ -15,6 +15,8 @@ import Profile from '../models/Profile';
 import * as FileSystem from 'expo-file-system';
 import { Linking } from 'expo';
 import UserSettings from '../data/UserSettings';
+import DropDownMenu from '../components/DropDownMenu';
+import BackButtonPrevPage from '../data/BackButtonPrevPage';
 
 
 interface ProfileViewProps {
@@ -37,9 +39,15 @@ function ProfileView(props: ProfileViewProps) {
         [fullSource, setFullSource] = useState<typeof props.fullSource>(props.fullSource),
         [profileId] = useState<number>(props.profileId),
         [modalMode, setModalMode] = useState<string>('ADD_MODE'), // INFO_MODE
-        [selectedCell, setSelectedCell] = useState<typeof source.rows[0]>();
+        [selectedCell, setSelectedCell] = useState<typeof source.rows[0]>(),
+        [isDropDownMenu, setIsDropDownMenu] = useState<boolean>(false);
 
     source = fullSource.filter(el => el.id === profileId)[0];
+
+
+    if (Emit.listeners('setIsDropDownMenuEmit').length === 0)
+        Emit.addListener('setIsDropDownMenuEmit', (is: boolean) => setIsDropDownMenu(is));
+
 
     let _handlePress = (url: string) => {
         Linking.openURL(url);
@@ -75,7 +83,7 @@ function ProfileView(props: ProfileViewProps) {
             plusEl = (
                 <TouchableOpacity activeOpacity={0.5} onPress={() => openInfoModalAction(source.rows[i])} style={styles.infoRowCell}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                        <Text style={{ textAlign: 'center', color: '#f8f8ff', fontWeight: 'bold', fontSize: 17 }}>{source.rows[i + 1].title.toUpperCase()}</Text>
+                        <Text style={{ textAlign: 'center', color: '#f8f 8ff', fontWeight: 'bold', fontSize: 17 }}>{source.rows[i + 1].title.toUpperCase()}</Text>
                     </View>
                 </TouchableOpacity>
             );
@@ -85,7 +93,7 @@ function ProfileView(props: ProfileViewProps) {
             <View key={`infoCell_${i}`} style={styles.infoRow}>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => openInfoModalAction(source.rows[i - 1])} style={styles.infoRowCell}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                        <Text style={{ textAlign: 'center', color: '#f8f8ff', fontWeight: 'bold', fontSize: 17 }}>{source.rows[i].title.toUpperCase()}</Text>
+                        <Text style={{ textAlign: 'center', color: '#f8f8ff', fontWeight: 'bold', fontSize: source.rows[i].title.length > 12 ? 17 - (source.rows[i].title.length - 12) : 17 }}>{source.rows[i].title.toUpperCase()}</Text>
                     </View>
                 </TouchableOpacity>
                 {plusEl}
@@ -137,14 +145,14 @@ function ProfileView(props: ProfileViewProps) {
         <View style={styles.profileViewBlock}>
             <View style={styles.loginTitleBlock}>
                 <View style={styles.loginWithBackButtonBlock}>
-                    <TouchableOpacity activeOpacity={0.5} onPress={(e) => { Emit.emit('routerSetPage', 0); }} style={styles.backButton}>
+                    <TouchableOpacity activeOpacity={0.5} onPress={(e) => { Emit.emit('routerSetPage', BackButtonPrevPage); }} style={styles.backButton}>
                         <Text style={styles.backButtonTitle}>{'<'}</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.logoWithBackTextBlock}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => setIsDropDownMenu(!isDropDownMenu)} style={styles.logoWithBackTextBlock}>
                     <Text style={{ ...styles.appTitle, ...{ color: UserSettings.theme } }}>Lover</Text>
                     <Text style={{ ...styles.appTitle, ...{ color: '#9e9ea3' } }}>Note</Text>
-                </View>
+                </TouchableOpacity>
             </View>
             <ScrollView style={styles.profileContentBlock}>
                 <TouchableOpacity activeOpacity={0.5} style={styles.profileNameBlock}>
@@ -211,6 +219,7 @@ function ProfileView(props: ProfileViewProps) {
                     </View>
                 </View>
             </Modal>
+            {isDropDownMenu && <DropDownMenu />}
         </View >
     );
 }

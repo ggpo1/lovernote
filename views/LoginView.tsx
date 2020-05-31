@@ -10,7 +10,8 @@ import {
     SafeAreaView,
     Modal,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Picker
 } from 'react-native';
 import Constants from 'expo-constants';
 import Profile from '../models/Profile';
@@ -18,6 +19,9 @@ import Emit from '../data/Emit';
 import * as FileSystem from 'expo-file-system';
 import { LoadCounter } from '../data/LoadCounter';
 import UserSettings from '../data/UserSettings';
+import AppTitle from '../components/AppTitle';
+import UserThemes from '../data/UserThemes';
+import Page from '../models/Page';
 
 interface LoginViewProps {
     source: Array<Profile>
@@ -26,19 +30,28 @@ interface LoginViewProps {
 function LoginView(props: LoginViewProps) {
     const [source, setSource] = useState<typeof props.source>(props.source),
         [addProfileModalVisible, setAddProfileModalVisible] = useState<boolean>(false),
-        [newProfileNameValue, setNewProfileNameValue] = useState<string>('');
+        [isSettingsModalVisible, setIsSettingsModalVisible] = useState<boolean>(false),
+        [newProfileNameValue, setNewProfileNameValue] = useState<string>(''),
+        [selectedTheme, setSelectedTheme] = useState<string>(UserSettings.theme);
+
+    
 
     if (Emit.listeners('loginViewSetSource').length === 0)
-        Emit.addListener('loginViewSetSource', (newSource) => {
-            console.log('updating source');
-            setSource(newSource)
-        });
+        Emit.addListener('loginViewSetSource', (newSource) => setSource(newSource));
 
     let profileElements: Array<JSX.Element> = [];
+
+    let colorsItems: Array<JSX.Element> = [];
+    if (isSettingsModalVisible) {
+        UserThemes.forEach(el => colorsItems.push(
+            <Picker.Item key={`${el.title}_${el.key}`} color={el.color} label={el.title} value={el.color} />
+        ));
+    }
+    
     // profile component
     try {
         source.forEach((el: Profile, i: number) => profileElements.push(
-            <TouchableHighlight activeOpacity={0} key={`profile_${i}_${el.id}`} onPress={(e) => { Emit.emit('routerSetPage', 1, el.id); }} style={styles.profileRow}>
+            <TouchableOpacity activeOpacity={0.5} key={`profile_${i}_${el.id}`} onPress={(e) => { Emit.emit('routerSetPage', Page.PROFILE, el.id); }} style={styles.profileRow}>
                 <View style={styles.profileRowView}>
                     <View style={styles.profileLogoBlock}>
                         <View style={styles.photoView}>
@@ -53,7 +66,7 @@ function LoginView(props: LoginViewProps) {
                         <Text style={styles.infoText}>{el.name}</Text>
                     </View>
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         ));
     } catch (e) {
 
@@ -61,8 +74,9 @@ function LoginView(props: LoginViewProps) {
     return (
         <SafeAreaView style={styles.loginViewWrapper}>
             <View style={styles.loginTitleBlock}>
-                <Text style={{ ...styles.appTitle, ...{ color: UserSettings.theme  } }}>Lover</Text>
-                <Text style={{ ...styles.appTitle, ...{ color: '#9e9ea3' } }}>Note</Text>
+                {/* <Text style={{ ...styles.appTitle, ...{ color: UserSettings.theme  } }}>Lover</Text> */}
+                {/* <Text style={{ ...styles.appTitle, ...{ color: '#9e9ea3' } }}>Note</Text> */}
+                <AppTitle />
             </View>
             <ScrollView style={styles.loginControlsBlock}>
                 {profileElements}
@@ -72,6 +86,22 @@ function LoginView(props: LoginViewProps) {
                     <View><Text style={styles.addText}>добавить</Text></View>
                 </View>
             </TouchableOpacity>
+            {/* Settings button */}
+            <TouchableOpacity activeOpacity={0.5} onPress={() => setIsSettingsModalVisible(!isSettingsModalVisible)} style={{
+                flex: 0.07,
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                marginTop: 15
+            }}>
+                <View style={styles.addButtonTitlesBlock}>
+                    <View><Text style={{
+                        color: '#9e9ea3',
+                        fontSize: 17,
+                        textDecorationLine: 'underline'
+                    }}>настройки</Text></View>
+                </View>
+            </TouchableOpacity>
+            {/* ADD MODAL */}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -94,7 +124,7 @@ function LoginView(props: LoginViewProps) {
                     }}>
                         <TouchableOpacity
                             onPress={() => {
-                                setAddProfileModalVisible(!addProfileModalVisible);
+                                setAddProfileModalVisible(false);
                             }}
                             activeOpacity={0.5}
                             style={{
@@ -128,6 +158,63 @@ function LoginView(props: LoginViewProps) {
                     </View>
                 </View>
             </Modal>
+            {/* SETTINGS MODAL */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isSettingsModalVisible}
+            >
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                    alignItems: 'center'
+                }}>
+                    <View style={{
+                        width: '100%',
+                        height: 400,
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10,
+                        borderWidth: 4,
+                        borderColor: UserSettings.theme,
+                        borderBottomColor: 'white',
+                        backgroundColor: 'white'
+                    }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setIsSettingsModalVisible(false);
+                            }}
+                            activeOpacity={0.5}
+                            style={{
+                                width: '100%',
+                                height: '10%',
+                                borderTopRightRadius: 10,
+                                borderTopLeftRadius: 10
+                            }}
+                        >
+                            <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                                <Image
+                                    source={require('../assets/modalClose.png')}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <View style={styles.modalContent}>
+                            <View key={'addModal_inputsBlock'} style={{ height: '50%' }}>
+                                <Picker
+                                    selectedValue={selectedTheme}
+                                    onValueChange={(itemValue, itemIndex) => { UserSettings.theme = itemValue; setSelectedTheme(itemValue); Emit.emit('forceUpdateEmit')}}
+                                >
+                                    {colorsItems}  
+                                </Picker>
+                            </View>
+                            <View key={'addModal_addButton'} style={{ height: '40%', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                <TouchableOpacity onPress={() => { }} activeOpacity={0.5} style={styles.modalAddButtonBlock}>
+                                    <View><Text style={styles.addText}>применить</Text></View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }
@@ -152,18 +239,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         fontSize: 20,
         color: UserSettings.theme
-        // fontWeight: 'bold'
     },
     addButtonTitlesBlock: {
-        // width: '35%',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        // backgroundColor: 'red'
     },
     modalContent: {
         width: '100%',
         height: '100%',
-        // justifyContent: 'space-around',
         padding: 10
     },
     addText: {
@@ -186,28 +269,16 @@ const styles = StyleSheet.create({
     },
     loginTitleBlock: {
         flex: 0.3,
-        flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'flex-end',
-        // backgroundColor: 'red',
     },
     loginControlsBlock: {
         flex: 1,
         paddingTop: '10%',
         marginVertical: 5,
-        // backgroundColor: 'purple'
-    },
-    appTitle: {
-        fontSize: 35,
-        fontWeight: 'bold',
-        // fontFamily: 'Bree'
     },
     profileRow: {
-        // outline: 'none',
         height: 120,
-        // height: 100,
         paddingTop: '1%',
-        // backgroundColor: 'red',
     },
     profileRowView: {
         height: '100%',
@@ -222,8 +293,6 @@ const styles = StyleSheet.create({
         flex: 0.6,
         alignItems: 'center',
         justifyContent: 'center',
-        // padding: '5%',
-        // backgroundColor: 'purple'
     },
     photoView: {
         width: '75%',
@@ -243,13 +312,11 @@ const styles = StyleSheet.create({
     },
     infoText: {
         fontSize: 18,
-        // fontWeight: 'bold',
         color: 'grey',
     },
     profileSmallInfoBlock: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'red',
     }
 });
