@@ -12,6 +12,7 @@ import UserSettings from '../data/UserSettings';
 import { GenderType } from '../models/IUserSettings';
 import Page from '../models/Page';
 import GiftsView from '../views/GiftsView';
+import FileDataOperations from './../data/FileDataOperations';
 
 function Router() {
     const [page, setPage] = useState<Page>(Page.LOGIN);
@@ -25,34 +26,50 @@ function Router() {
 
     console.log('____________ROUTER RENDER____________');
     // FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'data.json', '');
+    // FileDataOperations.ClearData();
 
-    if (Emit.listeners('routerSetPage').length === 0) 
+    if (Emit.listeners('routerSetPage').length === 0)
         Emit.addListener('routerSetPage', (newPage: number, newProfileId?: number) => {
-            if (newProfileId !== undefined) 
+            if (newProfileId !== undefined)
                 setProfileId(newProfileId);
             setPage(newPage);
         });
 
     if (Emit.listeners('forceUpdateEmit').length === 0)
         Emit.addListener('forceUpdateEmit', () => {
-            console.log('router force');
             forceUpdate
         });
+
+    let IsJsonString = (str: string) => {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
 
     // let _profiles: Array<Profile> = [];
     if (LoadCounter.count < 1) {
         (async () => {
-            let data = await FileSystem.readAsStringAsync(FileSystem.documentDirectory + 'data.json');
-            // console.log(data);
-            // source.push(JSON.parse(data));
+            let data: any = await FileSystem.readAsStringAsync(FileSystem.documentDirectory + 'data.json');
+
             if (JSON.stringify(profiles) !== data) {
-                setProfiles(JSON.parse(data));
-                Emit.emit('loginViewSetSource', JSON.parse(data));
+                let parsed = [];
+                //parsed = JSON.parse(data);
+
+                if (IsJsonString(data)) {
+                    // parsed = JSON.parse(data);
+                    setProfiles(JSON.parse(data));
+                    Emit.emit('loginViewSetSource', JSON.parse(data));
+                }
+
+
             }
         })();
     }
     // FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'data.json', JSON.stringify(Profiles));
-    
+
     let pageElement!: JSX.Element;
     if (page === Page.LOGIN) {
         pageElement = <LoginView source={profiles} />;
