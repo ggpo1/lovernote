@@ -178,11 +178,14 @@ function ProfileView(props: ProfileViewProps) {
                     <View style={styles.photoBlock}>
                         <Image
                             style={{ width: '100%', height: '100%', borderRadius: 10, opacity: 0.8 }}
-                            source={require('../assets/profilePhoto.jpg')}// TODO: save image to data.json
+                            source={{uri: `data:image/jpeg;base64,${source.photo}`}}
                         />
                     </View>
                 </TouchableOpacity>
                 {infoEls}
+                <TouchableOpacity style={styles.deleteButtonOpacity}>
+                    <Text style={styles.deleteProfileText}>удалить профиль</Text>
+                </TouchableOpacity>
             </ScrollView>
             <TouchableOpacity activeOpacity={0.5} onPress={() => { setTitleValue(''); setAnswerValue(''); setModalMode('ADD_MODE'); setModalVisible(true) }} style={styles.addButtonBlock}>
                 <View style={styles.addButtonTitlesBlock}>
@@ -241,6 +244,20 @@ function ProfileView(props: ProfileViewProps) {
 }
 
 const styles = StyleSheet.create({
+    deleteButtonOpacity: {
+        // backgroundColor: 'red',
+        borderRadius: 10,
+        marginTop: 20,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    deleteProfileText: {
+        color: '#9e9ea3',
+        // fontWeight: 'bold',
+        textDecorationLine: 'underline',
+        fontSize: 20
+    },
     modalAddButtonBlock: {
         borderRadius: 10,
         width: '100%',

@@ -1,8 +1,8 @@
 export default interface Profile {
     id: number,
-    photo: string,
+    photo?: string,
     name: string,
-    birth: string,
+    birth?: string,
     rows: Array<{
         key: string,
         type: string,
