@@ -21,9 +21,9 @@ function Router() {
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
 
-    console.log('THEME: ' + UserSettings.theme);
+    // console.log('THEME: ' + UserSettings.theme);
 
-    console.log('____________ROUTER RENDER____________');
+    // console.log('____________ROUTER RENDER____________');
     // FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'data.json', '');
 
     if (Emit.listeners('routerSetPage').length === 0) 
@@ -53,6 +53,8 @@ function Router() {
     }
     // FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'data.json', JSON.stringify(Profiles));
     
+    // console.log(profiles);
+
     let pageElement!: JSX.Element;
     if (page === Page.LOGIN) {
         pageElement = <LoginView source={profiles} />;

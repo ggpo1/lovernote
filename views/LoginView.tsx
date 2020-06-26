@@ -71,6 +71,8 @@ function LoginView(props: LoginViewProps) {
     } catch (e) {
 
     }
+
+    // console.log(source);
     return (
         <SafeAreaView style={styles.loginViewWrapper}>
             <View style={styles.loginTitleBlock}>

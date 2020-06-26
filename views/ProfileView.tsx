@@ -61,11 +61,27 @@ function ProfileView(props: ProfileViewProps) {
 
     let addNewQuestionHandle = () => {
         source.rows.push({
-            key: 'new key',
+            key: `${profileId}_${titleValue}_${answerValue}`,
             type: typeof '',
             title: titleValue,
             value: answerValue
         });
+        setModalVisible(!modalVisible);
+        for (let i = 0; i < fullSource.length; i++) {
+            if (fullSource[i].id === profileId) {
+                fullSource[i] = source;
+            }
+        }
+        FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'data.json', '');
+        FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'data.json', JSON.stringify(fullSource));
+    }
+
+    let removePinAction = () => {
+        // console.log('this');
+        // console.log(selectedCell);
+        // let index = ;
+        // console.log(index);
+        source.rows.splice(source.rows.indexOf(selectedCell!), 1);
         setModalVisible(!modalVisible);
         for (let i = 0; i < fullSource.length; i++) {
             if (fullSource[i].id === profileId) {
@@ -83,7 +99,7 @@ function ProfileView(props: ProfileViewProps) {
             plusEl = (
                 <TouchableOpacity activeOpacity={0.5} onPress={() => openInfoModalAction(source.rows[i])} style={styles.infoRowCell}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                        <Text style={{ textAlign: 'center', color: '#f8f 8ff', fontWeight: 'bold', fontSize: 17 }}>{source.rows[i + 1].title.toUpperCase()}</Text>
+                        <Text style={{ textAlign: 'center', color: '#f8f8ff', fontWeight: 'bold', fontSize: 17 }}>{source.rows[i + 1].title.toUpperCase()}</Text>
                     </View>
                 </TouchableOpacity>
             );
@@ -134,7 +150,7 @@ function ProfileView(props: ProfileViewProps) {
                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#9e9ea3' }}>{selectedCell!.value}</Text>
             </View>,
             <View key={'infoModal_addButton'} style={{ height: '70%', justifyContent: 'flex-end', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => addNewQuestionHandle()} activeOpacity={0.5} style={styles.modalAddButtonBlock}>
+                <TouchableOpacity onPress={() => removePinAction()} activeOpacity={0.5} style={styles.modalAddButtonBlock}>
                     <View><Text style={styles.addText}>удалить</Text></View>
                 </TouchableOpacity>
             </View>
