@@ -83,7 +83,7 @@ function ProfileView(props: ProfileViewProps) {
             plusEl = (
                 <TouchableOpacity activeOpacity={0.5} onPress={() => openInfoModalAction(source.rows[i])} style={styles.infoRowCell}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                        <Text style={{ textAlign: 'center', color: '#f8f 8ff', fontWeight: 'bold', fontSize: 17 }}>{source.rows[i + 1].title.toUpperCase()}</Text>
+                        <Text style={{ textAlign: 'center', color: '#f8f8ff', fontWeight: 'bold', fontSize: 17 }}>{source.rows[i + 1].title.toUpperCase()}</Text>
                     </View>
                 </TouchableOpacity>
             );
