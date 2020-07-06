@@ -66,75 +66,6 @@ function LoginView(props: LoginViewProps) {
                     setNewProfilePhoto(result)
                 }
 
-<<<<<<< HEAD
-    }
-
-    // console.log(source);
-    return (
-        <SafeAreaView style={styles.loginViewWrapper}>
-            <View style={styles.loginTitleBlock}>
-                {/* <Text style={{ ...styles.appTitle, ...{ color: UserSettings.theme  } }}>Lover</Text> */}
-                {/* <Text style={{ ...styles.appTitle, ...{ color: '#9e9ea3' } }}>Note</Text> */}
-                <AppTitle />
-            </View>
-            <ScrollView style={styles.loginControlsBlock}>
-                {profileElements}
-            </ScrollView>
-            <TouchableOpacity activeOpacity={0.5} onPress={() => setAddProfileModalVisible(!addProfileModalVisible)} style={styles.addButtonBlock}>
-                <View style={styles.addButtonTitlesBlock}>
-                    <View><Text style={styles.addText}>добавить</Text></View>
-                </View>
-            </TouchableOpacity>
-            {/* Settings button */}
-            <TouchableOpacity activeOpacity={0.5} onPress={() => setIsSettingsModalVisible(!isSettingsModalVisible)} style={{
-                flex: 0.07,
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                marginTop: 15
-            }}>
-                <View style={styles.addButtonTitlesBlock}>
-                    <View><Text style={{
-                        color: '#9e9ea3',
-                        fontSize: 17,
-                        textDecorationLine: 'underline'
-                    }}>настройки</Text></View>
-                </View>
-            </TouchableOpacity>
-            {/* ADD MODAL */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={addProfileModalVisible}
-            >
-                <View style={{
-                    flex: 1,
-                    justifyContent: 'flex-end',
-                    alignItems: 'center'
-                }}>
-                    <View style={{
-                        width: '100%',
-                        height: 400,
-                        borderTopLeftRadius: 10,
-                        borderTopRightRadius: 10,
-                        borderWidth: 4,
-                        borderColor: UserSettings.theme,
-                        borderBottomColor: 'white',
-                        backgroundColor: 'white'
-                    }}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                setAddProfileModalVisible(false);
-                            }}
-                            activeOpacity={0.5}
-                            style={{
-                                width: '100%',
-                                height: '10%',
-                                borderTopRightRadius: 10,
-                                borderTopLeftRadius: 10
-                            }}
-                        >
-                            <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-=======
             } catch (E) {
                 console.log(E);
             }
@@ -182,7 +113,6 @@ function LoginView(props: LoginViewProps) {
                     <View style={styles.profileRowView}>
                         <View style={styles.profileLogoBlock}>
                             <View style={styles.photoView}>
->>>>>>> 12746a19998a4cbf34b121c0e509dd551f5489e9
                                 <Image
                                     style={{ width: '100%', height: '100%', borderRadius: 10, opacity: 0.8 }}
                                     // source={el.photo}

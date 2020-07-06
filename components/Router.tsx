@@ -69,11 +69,6 @@ function Router() {
         })();
     }
     // FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'data.json', JSON.stringify(Profiles));
-<<<<<<< HEAD
-    
-    // console.log(profiles);
-=======
->>>>>>> 12746a19998a4cbf34b121c0e509dd551f5489e9
 
     let pageElement!: JSX.Element;
     if (page === Page.LOGIN) {
