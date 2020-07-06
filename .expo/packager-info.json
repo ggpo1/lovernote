@@ -1,17 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-<<<<<<< HEAD
-  "packagerPid": 7330,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
   "ngrokPid": null,
   "webpackServerPort": null
-=======
-  "packagerPid": 14552,
-  "expoServerNgrokUrl": "https://yr-7fh.vovan121996.lovernote.exp.direct",
-  "packagerNgrokUrl": "https://packager.yr-7fh.vovan121996.lovernote.exp.direct",
-  "ngrokPid": 15516
->>>>>>> 12746a19998a4cbf34b121c0e509dd551f5489e9
 }
