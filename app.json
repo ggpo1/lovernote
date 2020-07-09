@@ -21,10 +21,13 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.devcore.lovernote"
+    },
     "ios": {
-      "bundleIdentifier": "com.yourcompany.yourappname",
+      "bundleIdentifier": "com.devcore.lovernote",
       "buildNumber": "1.0.0",
-      "supportsTablet": true
+      "supportsTablet": false
     }
   }
 }

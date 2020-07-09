@@ -53,7 +53,7 @@ function Router() {
     if (LoadCounter.count < 1) {
         (async () => {
             let data: any = await FileSystem.readAsStringAsync(FileSystem.documentDirectory + 'data.json');
-
+            console.log(data);
             if (JSON.stringify(profiles) !== data) {
                 let parsed = [];
                 //parsed = JSON.parse(data);
